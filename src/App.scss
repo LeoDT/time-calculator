@@ -1,0 +1,59 @@
+@import 'mini.css/dist/mini-nord.css';
+
+html,
+input {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu, sans-serif;
+}
+
+:root {
+  --card-border-color: #d8dee9;
+  --card-fore-color: #4c566a;
+  --input-border-color: #d8dee9;
+}
+
+.card.clickable {
+  cursor: pointer;
+
+  .section {
+    transition: background-color 0.15s ease-out;
+  }
+
+  &:hover {
+    .section {
+      background-color: #d8dee9;
+    }
+  }
+}
+
+.timeline {
+  h3 {
+    min-height: 33px;
+
+    input {
+      font-size: calc(1rem * var(--heading-ratio) * var(--heading-ratio));
+      padding: 0;
+      line-height: 1.2;
+      font-weight: 500;
+      border: none;
+      margin: 0;
+    }
+  }
+}
+
+.start-time-item {
+  input[type='datetime-local'] {
+    background-color: var(--input-back-color);
+    border: 1px solid var(--input-border-color);
+    font-size: calc(1rem * var(--heading-ratio));
+    border-radius: var(--universal-border-radius);
+    padding: 0;
+    font-weight: 500;
+  }
+}
+
+.time-item {
+  .delta input {
+    padding: 0;
+    line-height: 1;
+  }
+}
