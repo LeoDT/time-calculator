@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html -d ./ --no-source-maps"
+    "build": "parcel build src/index.html -d ./ --no-source-maps --public-url ./"
   },
   "main": "index.js",
   "repository": "git@github.com:LeoDT/time-calculator.git",
