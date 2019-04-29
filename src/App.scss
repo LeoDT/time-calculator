@@ -70,9 +70,14 @@ input {
 .time-item {
   box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.06);
   border: none;
+  align-self: stretch;
 
   .section {
     background-color: white;
+  }
+
+  > .section:first-child {
+    flex-grow: 1;
   }
 }
 
