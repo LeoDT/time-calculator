@@ -9,6 +9,7 @@ input {
   --card-border-color: #d8dee9;
   --card-fore-color: #4c566a;
   --input-border-color: #d8dee9;
+  --universal-border-radius: 4px;
 }
 
 .card.clickable {
@@ -22,6 +23,16 @@ input {
     .section {
       background-color: #d8dee9;
     }
+  }
+}
+
+.editable-text {
+  .autosize-input {
+    max-width: 100%;
+  }
+
+  &.placeholder:not(.edit) {
+    opacity: 0.6;
   }
 }
 
@@ -41,6 +52,10 @@ input {
 }
 
 .start-time-item {
+  h4 span {
+    line-height: 1.2;
+  }
+
   input[type='datetime-local'] {
     background-color: var(--input-back-color);
     border: 1px solid var(--input-border-color);
@@ -51,9 +66,57 @@ input {
   }
 }
 
+.start-time-item,
+.time-item {
+  box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.06);
+  border: none;
+
+  .section {
+    background-color: white;
+  }
+}
+
 .time-item {
   .delta input {
     padding: 0;
     line-height: 1;
+  }
+  .comment {
+    word-break: break-all;
+    max-width: 100%;
+
+    input {
+      padding: 0;
+      line-height: 1;
+      margin: 0;
+      max-width: 100%;
+    }
+  }
+}
+
+.card > .button-section {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+
+  .section-button {
+    flex-grow: 1;
+    text-align: center;
+    padding: var(--universal-padding);
+    cursor: pointer;
+    transition: background-color 0.15s ease-out;
+
+    &:not(.disabled):hover {
+      background-color: var(--back-color);
+    }
+
+    &:not(:last-child) {
+      border-right: 0.0625rem solid var(--card-border-color);
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   }
 }

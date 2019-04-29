@@ -9,6 +9,7 @@
   "author": "LeoDT <leojoy710@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.2.6",
     "immutability-helper": "^3.0.0",
     "lodash": "^4.17.11",
     "luxon": "^1.12.1",

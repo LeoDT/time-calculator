@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import React, { useState } from 'react';
 import AutosizeInput from 'react-input-autosize';
 
@@ -5,19 +6,21 @@ type Props = {
   value: string;
   onChange: (value: string) => void;
 
+  placeholder?: string;
   maxLength?: number;
 };
 
-export default function EditableText({ value, onChange, maxLength }: Props) {
+export default function EditableText({ value, onChange, placeholder, maxLength }: Props) {
   const [edit, setEdit] = useState(false);
   const [editValue, setEditValue] = useState(value);
 
   return (
-    <span className="editable-text">
+    <span className={classnames('editable-text', { placeholder: !value && placeholder, edit })}>
       {edit ? (
         <span>
           <AutosizeInput
             autoFocus
+            className="autosize-input"
             type="text"
             onBlur={() => {
               setEdit(false);
@@ -33,7 +36,7 @@ export default function EditableText({ value, onChange, maxLength }: Props) {
         </span>
       ) : (
         <span onClick={() => setEdit(true)}>
-          {value} <span className="icon-edit" />
+          {value || placeholder} <span className="icon-edit" />
         </span>
       )}
     </span>

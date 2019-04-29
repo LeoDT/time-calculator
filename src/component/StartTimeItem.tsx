@@ -89,6 +89,18 @@ export default function StartTimeItem({ timeline, dispatch }: Props) {
           )}
         </h4>
       </div>
+      <div className="section button-section">
+        <div className="section-button disabled">Before</div>
+        <div className="section-button disabled">Delete</div>
+        <div
+          className="section-button"
+          onClick={() => {
+            dispatch({ type: 'ADD_TIME_ITEM', payload: { timeline, at: 0 } });
+          }}
+        >
+          After
+        </div>
+      </div>
     </div>
   );
 }

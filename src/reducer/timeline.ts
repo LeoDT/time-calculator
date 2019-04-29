@@ -40,6 +40,7 @@ type AddTimeItemAction = {
   type: 'ADD_TIME_ITEM';
   payload: {
     timeline: Timeline;
+    at?: number;
   };
 };
 
@@ -52,11 +53,20 @@ type UpdateTimeItemAction = {
   };
 };
 
+type RemoveTimeItemAction = {
+  type: 'REMOVE_TIME_ITEM';
+  payload: {
+    timeline: Timeline;
+    item: TimeItem;
+  };
+};
+
 export type Action =
   | AddTimelineAction
   | UpdateimelineAction
   | AddTimeItemAction
-  | UpdateTimeItemAction;
+  | UpdateTimeItemAction
+  | RemoveTimeItemAction;
 
 function updateTimeline(
   timelines: Array<Timeline>,
@@ -92,7 +102,7 @@ function updateTimeItem(timeline: Timeline, oldItem: TimeItem, item: TimeItem) {
   };
 }
 
-export function reducer(state: State, action: Action): State {
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'ADD_TIMELINE':
       return {
@@ -120,22 +130,28 @@ export function reducer(state: State, action: Action): State {
 
     case 'ADD_TIME_ITEM':
       return (() => {
-        const { timeline } = action.payload;
-        const lastItem = last(timeline.items);
+        const { timeline, at } = action.payload;
+        const insertIndex = at || at === 0 ? at : timeline.items.length;
+        const lastItem = timeline.items[insertIndex - 1];
 
         return {
           ...state,
           timelines: updateTimeline(state.timelines, timeline, {
             ...timeline,
-            items: [
-              ...timeline.items,
-              {
-                delta: Duration.fromObject({ hour: 0 }),
-                timezone: lastItem ? lastItem.timezone : timeline.start.zone,
-                comment: '',
-                id: uniqueId(`${timeline.id}_item_`)
-              }
-            ]
+            items: update(timeline.items, {
+              $splice: [
+                [
+                  insertIndex,
+                  0,
+                  {
+                    delta: Duration.fromObject({ hour: 0 }),
+                    timezone: lastItem ? lastItem.timezone : timeline.start.zone,
+                    comment: '',
+                    id: uniqueId(`${timeline.id}_item_`)
+                  }
+                ]
+              ]
+            })
           })
         };
       })();
@@ -143,7 +159,6 @@ export function reducer(state: State, action: Action): State {
     case 'UPDATE_TIME_ITEM':
       return (() => {
         const { timeline, oldItem, item } = action.payload;
-        const timelineIndex = state.timelines.findIndex(t => t === timeline);
 
         return {
           ...state,
@@ -155,7 +170,33 @@ export function reducer(state: State, action: Action): State {
         };
       })();
 
+    case 'REMOVE_TIME_ITEM':
+      return (() => {
+        const { timeline, item } = action.payload;
+        const itemIndex = timeline.items.findIndex(i => i === item);
+
+        return {
+          ...state,
+          timelines: updateTimeline(state.timelines, timeline, {
+            ...timeline,
+            items: update(timeline.items, { $splice: [[itemIndex, 1]] })
+          })
+        };
+      })();
+
     default:
       return state;
   }
 }
+
+function persist(state: State, action: Action) {
+  const s = reducer(state, action);
+
+  setTimeout(() => {
+    localStorage.setItem('leodt/time-calculator', JSON.stringify(s));
+  }, 0);
+
+  return s;
+}
+
+export default persist;

@@ -30,6 +30,19 @@ export default function TimeItem({ timeline, item, dispatch }: Props) {
     return t.setZone(item.timezone);
   }, [timeline, prevs]);
 
+  function updateItem(newItem: TimeItemType) {
+    dispatch({
+      type: 'UPDATE_TIME_ITEM',
+      payload: {
+        timeline,
+        oldItem: item,
+        item: newItem
+      }
+    });
+  }
+
+  const itemIndex = timeline.items.findIndex(i => i === item);
+
   return (
     <div className="time-item card">
       <div className="section">
@@ -43,14 +56,7 @@ export default function TimeItem({ timeline, item, dispatch }: Props) {
 
                 if (Number.isNaN(hours)) return;
 
-                dispatch({
-                  type: 'UPDATE_TIME_ITEM',
-                  payload: {
-                    timeline,
-                    oldItem: item,
-                    item: { ...item, delta: Duration.fromObject({ hours }) }
-                  }
-                });
+                updateItem({ ...item, delta: Duration.fromObject({ hours }) });
               }}
               maxLength={3}
             />
@@ -59,20 +65,49 @@ export default function TimeItem({ timeline, item, dispatch }: Props) {
             <TimeZoneSelect
               value={time.zone}
               onChange={z => {
-                dispatch({
-                  type: 'UPDATE_TIME_ITEM',
-                  payload: {
-                    timeline,
-                    oldItem: item,
-                    item: { ...item, timezone: z }
-                  }
-                });
+                updateItem({ ...item, timezone: z });
               }}
             />
           </div>
         </div>
 
         <h4>{time.toLocaleString(DateTime.DATETIME_SHORT)}</h4>
+
+        <div className="comment">
+          <EditableText
+            value={item.comment}
+            placeholder="Comment..."
+            onChange={comment => {
+              updateItem({ ...item, comment });
+            }}
+          />
+        </div>
+      </div>
+      <div className="section button-section">
+        <div
+          className="section-button"
+          onClick={() => {
+            dispatch({ type: 'ADD_TIME_ITEM', payload: { timeline, at: itemIndex } });
+          }}
+        >
+          Before
+        </div>
+        <div
+          className="section-button"
+          onClick={() => {
+            dispatch({ type: 'REMOVE_TIME_ITEM', payload: { timeline, item } });
+          }}
+        >
+          Delete
+        </div>
+        <div
+          className="section-button"
+          onClick={() => {
+            dispatch({ type: 'ADD_TIME_ITEM', payload: { timeline, at: itemIndex + 1 } });
+          }}
+        >
+          After
+        </div>
       </div>
     </div>
   );
